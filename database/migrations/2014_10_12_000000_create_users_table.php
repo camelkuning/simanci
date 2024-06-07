@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('email_user', 100)->unique();
+            $table->string('email_user')->unique();
             $table->string('nama_user', 50);
             $table->string('role', 50);
             $table->string('password', 80);
+            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -29,3 +30,4 @@ return new class extends Migration
         Schema::dropIfExists('users');
     }
 };
+
