@@ -36,6 +36,11 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="btn-group">
+                            <a type="button" class="btn btn-dark" href="/tambahkaryawan">
+                                <i class="bi bi-plus-circle-fill"></i>&nbsp; Karyawan
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

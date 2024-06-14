@@ -11,6 +11,7 @@ use App\Models\karyawan;
 use App\Models\Rotasikunci;
 use App\Models\tambahkunci;
 use App\Models\kantor;
+use App\Models\Jabatan;
 
 class PetugasController extends Controller
 {
@@ -27,11 +28,12 @@ class PetugasController extends Controller
     {
         $users = Rotasikunci::all();
         $result = DB::table('rotasikunci as rk')
-            ->join('kunci AS k', 'rk.id_kunci', '=', 'k.id_kunci')
-            ->leftJoin('karyawan AS kar', 'kar.id_karyawan', '=', 'rk.id_karyawan')
-            ->leftJoin('karyawan AS kar2', 'kar2.id_karyawan', '=', 'rk.id_karyawan_pengembali')
-            ->select('k.nama_kunci', 'kar.nama_karyawan', 'kar2.nama_karyawan AS nama_karyawan_pengembalian', 'rk.*')
-            ->get();
+        ->join('users AS us', 'rk.id_satpam', '=', 'us.id')
+        ->join('kunci AS k', 'rk.id_kunci', '=', 'k.id_kunci')
+        ->leftJoin('karyawan AS kar', 'kar.id_karyawan', '=', 'rk.id_karyawan')
+        ->leftJoin('karyawan AS kar2', 'kar2.id_karyawan', '=', 'rk.id_karyawan_pengembali')
+        ->select('k.nama_kunci', 'kar.nama_karyawan', 'kar2.nama_karyawan AS nama_karyawan_pengembalian', 'rk.*', 'us.nama_user')
+        ->get();
         // dd($users);
         return view('petugas.sirkulasi', compact('result'));
 
@@ -42,6 +44,7 @@ class PetugasController extends Controller
         // $kunci = Kunci::all();
         $karyawan = Karyawan::all();
         // $users = User::all();
+        // $jabatan = Jabatan::all();
         return view('petugas.karyawan', compact('karyawan'));
     }
 
@@ -56,10 +59,11 @@ class PetugasController extends Controller
     {
         $users = Rotasikunci::all();
         $result = DB::table('rotasikunci as rk')
+            ->join('users AS us', 'rk.id_satpam', '=', 'us.id')
             ->join('kunci AS k', 'rk.id_kunci', '=', 'k.id_kunci')
             ->leftJoin('karyawan AS kar', 'kar.id_karyawan', '=', 'rk.id_karyawan')
             ->leftJoin('karyawan AS kar2', 'kar2.id_karyawan', '=', 'rk.id_karyawan_pengembali')
-            ->select('k.nama_kunci', 'kar.nama_karyawan', 'kar2.nama_karyawan AS nama_karyawan_pengembalian', 'rk.*')
+            ->select('k.nama_kunci', 'kar.nama_karyawan', 'kar2.nama_karyawan AS nama_karyawan_pengembalian', 'rk.*', 'us.nama_user')
             ->get();
         // dd($users);
         return view('petugas.sirkulasi_satpam', compact('result'));
@@ -69,12 +73,14 @@ class PetugasController extends Controller
     {
         $kunci = Kunci::where('status', 'tersedia')->get();
         $karyawan = Karyawan::all();
-        $users = user::all();
+        $users = user::where('role', 'satpam')->get();
+        // dd($users);
         return view('petugas.formpinjam', compact('users', 'kunci', 'karyawan'));
     }
     public function postform(Request $request)
     {
         $validate = $request->validate([
+            'id_satpam' => 'required',
             'id_kunci' => 'required',
             'id_karyawan' => 'required',
             'id_karyawan_pengembali' => 'nullable',
@@ -87,6 +93,7 @@ class PetugasController extends Controller
                 'status' => $request->status_kunci
             ]);
             Rotasikunci::create([
+                'id_satpam' => $request->id_satpam,
                 'id_kunci' => $request->id_kunci,
                 'id_karyawan' => $request->id_karyawan,
                 'id_karyawan_pengembali' => NULL,
@@ -105,7 +112,7 @@ class PetugasController extends Controller
         $result = Rotasikunci::find($no_rotasi);
         $kunci = Kunci::all();
         $karyawan = Karyawan::all();
-        $users = user::all();
+        $users = user::where('role', 'satpam')->get();
         return view('petugas.formpengembalian', compact('result', 'users', 'kunci', 'karyawan'));
     }
 
@@ -195,12 +202,31 @@ class PetugasController extends Controller
 
     public function tambahkaryawan()
     {
-        $kunci = Kunci::all();
+        $jabatan = Jabatan::all();
         $karyawan = Karyawan::all();
-        $users = user::all();
-        $kantor = user::all();
-        return view('petugas.tambahkaryawan', compact('users', 'kunci', 'karyawan', 'kantor'));
+        return view('petugas.tambahkaryawan', compact('karyawan', 'jabatan'));
 
+    }
+
+    public function posttambahkaryawan(Request $request)
+    {
+        
+        $request->validate([
+            'id_karyawan' => 'required',
+            'nama_karyawan' => 'required',
+            'kode_jabatan' => 'required',
+            'no_tlp_karyawan' => 'required',
+
+        ]);
+        //  dd($request->all());
+        karyawan::create([
+            'id_karyawan' => $request->id_karyawan,
+            'nama_karyawan' => $request->nama_karyawan,
+            'kode_jabatan' => $request->kode_jabatan,
+            'no_tlp_karyawan' => $request->no_tlp_karyawan,
+        ]);
+
+        return redirect('/admin')->with('success', 'Data Karyawan Berhasil Ditambahkan');
     }
 
     public function deletekantor($kode_kantor)

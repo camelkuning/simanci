@@ -19,12 +19,12 @@
                                 <tr>
                                     <th>Nomor</th>
                                     <th>Nama Kunci</th>
+                                    <th>Nama Penerima</th>
                                     <th>Nama Karyawan Peminjam</th>
                                     <th>Nama Karyawan Pengembali</th>
                                     <th>waktu_peminjaman</th>
                                     <th>waktu_pengembalian</th>
-                                    <th>status_kunci</th>
-                                    <th>Nama Penerima Kunci</th>
+                                    <th>status_kunci</th> 
                                     {{-- <th>Aksi</th> --}}
                                 </tr>
                             </thead> 
@@ -33,6 +33,7 @@
                                     <tr>
                                         <td>{{ $idx + 1 }}</td>
                                         <td>{{ $item->nama_kunci  }}</td>
+                                        <td>{{ $item->nama_user }}</td>
                                         <td>{{ $item->nama_karyawan  }}</td>
                                         <td>{{ $item->nama_karyawan_pengembalian }}</td>
                                         <td>{{ $item->waktu_peminjaman  }}</td>

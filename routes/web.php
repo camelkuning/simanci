@@ -27,6 +27,9 @@ Route::middleware('role:admin')->group(function () {
     Route::get('/daftarkantor', [PetugasController::class, 'daftarkantor'])->name('daftarkantoradmin');    
     Route::get('/tambahkantor', [PetugasController::class, 'tambahkantor'])->name('tambahkantoradmin');    
     Route::post('/posttambahkantor', [PetugasController::class, 'posttambahkantor'])->name('posttambahkantoradmin'); 
+
+    Route::get('/tambahkaryawan', [PetugasController::class, 'tambahkaryawan'])->name('tambahkaryawan'); 
+    Route::post('/posttambahkaryawan', [PetugasController::class, 'posttambahkaryawan'])->name('posttambahkaryawan');
     
     Route::get('/delete/{kode_kantor}', [PetugasController::class, 'deletekantor'])->name('deletekantoradmin');
 

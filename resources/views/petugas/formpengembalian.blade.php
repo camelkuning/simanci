@@ -4,13 +4,21 @@
     <div id="layoutSidenav_content">
         <div class="container-fluid px-4">
             <div class="container-fluid px-4">
-                <h5 class="modal-title m-4 text-center" id="karyawanFormModalLabel">Form Pengisian Karyawan</h5>
+                <h5 class="modal-title m-4 text-center" id="karyawanFormModalLabel">Form Pengembalian Kunci</h5>
                 <div class="modal-body">
                     <div class="card">
                         <div class="card-body">
                             <form action="/postpengembalian/{{ $result->no_rotasi }}" method="POST">
                                 @csrf
                                 @method('PUT')
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Pilih Penerima </label>
+                                    <select class="form-select" aria-label="Default select example" name="id_satpam">
+                                        @foreach ($users as $item)
+                                            <option {{ $item->id == $result->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->nama_user }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <input type="text" hidden name="no_rotasi" value="{{ $result->no_rotasi }}">
                                 <div class="form-group mb-3">
                                     <label class="form-label">Pilih Kunci</label>
@@ -23,10 +31,10 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label class="form-label">Karyawan Peminjam</label>
-                                    <select class="form-select" aria-label="Default select example" name="id_karyawan">
+                                    <select class="form-select" aria-label="Default select example"  name="id_karyawan">
                                         @foreach ($karyawan as $item)
                                             <option {{ $item->id_karyawan == $result->id_karyawan ? 'selected' : '' }}
-                                                value="{{ $item->id_karyawan }}">{{ $item->nama_karyawan }}</option>
+                                                value="{{ $item->id_karyawan }}">{{ $item->nama_karyawan }} </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -59,7 +67,8 @@
                                         <option selected value="dikembalikan">Dikembalikan</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-dark mb-4 w-10"><i class="bi bi-pencil-square"></i>&nbsp; Update</button>
+                                <button type="submit" class="btn btn-dark mb-4 w-10"><i
+                                        class="bi bi-pencil-square"></i>&nbsp; Update</button>
                             </form>
                         </div>
                     </div>

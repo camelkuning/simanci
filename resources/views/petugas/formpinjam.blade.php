@@ -31,6 +31,16 @@
                             <form action="/postsirkulasisatpam" method="POST">
                                 @csrf
 
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Pilih Penerima </label>
+                                    <select class="form-select" aria-label="Default select example" name="id_satpam">
+                                        <option selected>Pilih Penerima</option>
+                                        @foreach ($users as $item)
+                                            <option value="{{ $item->id }}">{{ $item->nama_user }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="form-group mb-3">
                                     <label class="form-label">Pilih Kunci</label>
                                     <select class="form-select" aria-label="Default select example" name="id_kunci">
@@ -41,9 +51,9 @@
                                     </select>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label class="form-label">ID Karyawan</label>
+                                    <label class="form-label">Nama Karyawan</label>
                                     <select class="form-select" aria-label="Default select example" name="id_karyawan">
-                                        <option selected>Pilih ID</option>
+                                        <option selected>Daftar Karyawan</option>
                                         @foreach ($karyawan as $item)
                                             <option value="{{ $item->id_karyawan }}">{{ $item->nama_karyawan }}</option>
                                         @endforeach
